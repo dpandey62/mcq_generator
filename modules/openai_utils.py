@@ -3,7 +3,7 @@ from langchain.llms import OpenAI
 
 def initialize_openai(api_key):
     """Initialize OpenAI API."""
-    openai.api_key = api_key
+    openai.api_key = OPENAI_KEY
     return OpenAI(model_name="text-davinci-003", temperature=0.7)
 
 def generate_completion(prompt, max_tokens=150):
