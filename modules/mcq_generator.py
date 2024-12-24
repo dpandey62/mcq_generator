@@ -1,8 +1,14 @@
-from langchain_utils import generate_mcq_chain, track_tokens
+import streamlit as st
+import json
 
-def generate_mcqs(text, number, subject, tone, llm):
-    """Generate MCQs based on input parameters."""
-    chain = generate_mcq_chain(llm)
-    inputs = {"text": text, "number": number, "subject": subject, "tone": tone}
-    mcqs = track_tokens(chain, inputs)
-    return mcqs
+def display_mcq(response_json):
+    """Displays MCQs on the Streamlit app."""
+    try:
+        mcq_data = json.loads(response_json)
+        for q_no, question_data in mcq_data.items():
+            st.subheader(f"Q{q_no}: {question_data['mcq']}")
+            for option, value in question_data["options"].items():
+                st.write(f"{option.upper()}: {value}")
+            st.success(f"Correct Answer: {question_data['correct']}")
+    except json.JSONDecodeError:
+        st.error("Invalid response format from the AI model.")

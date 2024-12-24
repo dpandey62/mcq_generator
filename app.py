@@ -1,22 +1,23 @@
 import streamlit as st
 from modules.openai_utils import initialize_openai
-from modules.mcq_generator import generate_mcqs
+from modules.chain_utils import create_chain
+from modules.mcq_utils import display_mcq
 
-# Initialize API
-st.title("AI-Powered MCQ Generator")
-api_key = st.text_input("Enter OpenAI API Key:", type="password")
-llm = None
+# Initialize OpenAI API
+initialize_openai()
 
-if api_key:
-    llm = initialize_openai(api_key)
-    st.success("OpenAI API Initialized!")
+# Streamlit App
+st.title("Automated MCQ Generator")
 
-# Input Section
-text = st.text_area("Enter the text for MCQ generation:")
-subject = st.text_input("Enter the subject:")
-tone = st.selectbox("Select the tone:", ["Neutral", "Formal", "Conversational"])
-number = st.number_input("Number of MCQs:", min_value=1, max_value=10, value=3)
+text = st.text_area("Enter the source text for MCQ generation:")
+number_of_questions = st.number_input("Number of questions to generate:", min_value=1, max_value=10, step=1)
+tone = st.selectbox("Select the tone of questions:", ["Formal", "Informal", "Neutral"])
+subject = st.text_input("Enter the subject of the content:")
 
-if st.button("Generate MCQs") and llm:
-    mcqs = generate_mcqs(text, number, subject, tone, llm)
-    st.json(mcqs)
+if st.button("Generate MCQs"):
+    if text.strip():
+        chain = create_chain()
+        response = chain.run({"text": text, "number": number_of_questions, "tone": tone, "subject": subject})
+        display_mcq(response)
+    else:
+        st.error("Please enter some text for MCQ generation.")

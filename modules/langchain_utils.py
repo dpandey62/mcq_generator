@@ -1,33 +1,29 @@
-from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain
-from langchain.callbacks import get_openai_callback
+from langchain.prompts import PromptTemplate
+from langchain.chat_models import ChatOpenAI
 
-def generate_mcq_chain(llm):
-    """Create an MCQ generation chain using LangChain."""
+def create_chain():
+    """Creates and returns an LLMChain for MCQ generation."""
     template = """
-    Generate {number} MCQs based on the following text:
+    Create {number} multiple-choice questions from the following text:
     Text: {text}
     Subject: {subject}
     Tone: {tone}
+    
     Response format:
     {
         "1": {
-            "mcq": "Question?",
-            "options": {"a": "Option A", "b": "Option B", "c": "Option C", "d": "Option D"},
-            "correct": "Correct Option"
-        },
-        ...
+            "mcq": "Question text here",
+            "options": {
+                "a": "Option A",
+                "b": "Option B",
+                "c": "Option C",
+                "d": "Option D"
+            },
+            "correct": "Correct answer text"
+        }
     }
     """
-    prompt = PromptTemplate(
-        input_variables=["text", "number", "subject", "tone"],
-        template=template,
-    )
-    return LLMChain(prompt=prompt, llm=llm)
-
-def track_tokens(chain, inputs):
-    """Track token usage for a chain."""
-    with get_openai_callback() as callback:
-        result = chain.run(inputs)
-        print("Tokens Used:", callback.total_tokens)
-    return result
+    prompt = PromptTemplate(input_variables=["text", "number", "tone", "subject"], template=template)
+    llm = ChatOpenAI(temperature=0.7)
+    return LLMChain(llm=llm, prompt=prompt)
