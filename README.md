@@ -21,21 +21,21 @@ streamlit
 # 
 
 
-# nstallation
+# Installation
 Clone the repository:
 
-git clone https://github.com/AkshaySatasiya/mcqgen.git 
+
 
 cd mcqgen
 
 Create a virtual environment (optional but recommended):
 
 
-Install the required dependencies:
+# Install the required dependencies:
 
 pip install -r requirements.txt
 
-Set up the API key:
+# Set up the API key:
 
 Obtain an API key from OpenAI.
 
