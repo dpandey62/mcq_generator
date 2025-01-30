@@ -22,7 +22,7 @@ streamlit
 
 
 # Installation
-Clone the repository:
+Clone the repository:https://github.com/dpandey62/mcq_generator
 
 
 
